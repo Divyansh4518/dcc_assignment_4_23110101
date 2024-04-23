@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Political Party Details</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<body>
+    <h1>Political Party Details</h1>
+    <hr>
+    <h2>Filtered Data</h2>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Bond Number</th>
+                <th>Company/Individual</th>
+                <th>Political Party</th>
+                <th>Amount</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in data %}
+            <tr>
+                <td>{{ row.bond_number }}</td>
+                <td>{{ row.company_individual }}</td>
+                <td>{{ row.political_party }}</td>
+                <td>{{ row.amount }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <hr>
+    <h2>Total Value of Bonds Purchased</h2>
+    <div id="bar-plot"></div>
+    <script>
+        var parties = [];
+        var amounts = [];
+        {% for row in data %}
+        parties.push("{{ row.political_party }}");
+        amounts.push({{ row.amount }});
+        {% endfor %}
+
+        var trace = {
+            x: parties,
+            y: amounts,
+            type: 'bar'
+        };
+        var data = [trace];
+        var layout = {
+            title: 'Total Value of Bonds Purchased by Political Party',
+            xaxis: { title: 'Political Party' },
+            yaxis: { title: 'Total Amount' }
+        };
+        Plotly.newPlot('bar-plot', data, layout);
+    </script>
+</body>
+</html>

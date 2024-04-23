@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Company/Individual Details</title>
+    <!-- Load Plotly.js -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<body>
+    <h1>Company/Individual Details</h1>
+    <hr>
+    <h2>Filtered Data</h2>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Bond Number</th>
+                <th>Company/Individual</th>
+                <th>Political Party</th>
+                <th>Amount</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in data %}
+            <tr>
+                <td>{{ row.bond_number }}</td>
+                <td>{{ row.company_individual }}</td>
+                <td>{{ row.political_party }}</td>
+                <td>{{ row.amount }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <hr>
+    <h2>Total Value of Bonds Purchased</h2>
+    <div id="bar-plot"></div>
+
+    <script>
+
+        var companies = [];
+        var amounts = [];
+        {% for row in data %}
+        companies.push("{{ row.company_individual }}");
+        amounts.push({{ row.amount }});
+        {% endfor %}
+
+        var trace = {
+            x: companies,
+            y: amounts,
+            type: 'bar'
+        };
+        var data = [trace];
+        var layout = {
+            title: 'Total Value of Bonds Purchased by Company/Individual',
+            xaxis: { title: 'Company/Individual' },
+            yaxis: { title: 'Total Amount' }
+        };
+        Plotly.newPlot('bar-plot', data, layout);
+    </script>
+</body>
+</html>

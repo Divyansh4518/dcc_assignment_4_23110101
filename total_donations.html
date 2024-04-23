@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Total Donations</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        #pie-chart {
+            width: 600px;
+            height: 400px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Total Donations</h1>
+    <hr>
+    <h2>Filtered Data</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Political Party</th>
+                <th>Total Amount</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in data %}
+            <tr>
+                <td>{{ row.political_party }}</td>
+                <td>{{ row.total_amount }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <hr>
+    <h2>Total Amount of Donations to All Parties</h2>
+    <div id="pie-chart"></div>
+    <script>
+        var parties = [];
+        var amounts = [];
+        {% for row in data %}
+        parties.push("{{ row.political_party }}");
+        amounts.push({{ row.total_amount }});
+        {% endfor %}
+
+        var data = [{
+            values: amounts,
+            labels: parties,
+            type: 'pie'
+        }];
+        var layout = {
+            title: 'Total Amount of Donations to All Parties'
+        };
+        Plotly.newPlot('pie-chart', data, layout);
+    </script>
+</body>
+</html>
