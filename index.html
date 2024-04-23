@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Donation Tracker</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<body>
+    <div class="container mt-5">
+        <h1>Donation Tracker</h1>
+        <hr>
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <input type="text" id="searchInput" class="form-control" placeholder="Search by Bond Number">
+            </div>
+            <div class="col-md-6">
+                <button id="searchButton" class="btn btn-primary">Search</button>
+            </div>
+        </div>
+        <div id="searchResults" class="mb-5">
+        </div>
+        <div class="form-group">
+            <label for="companySelect">Select Company/Individual:</label>
+            <select id="companySelect" class="form-control">
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="partySelect">Select Political Party:</label>
+            <select id="partySelect" class="form-control">
+            </select>
+        </div>
+        <div id="plot1" class="mb-3">
+        </div>
+        <div id="plot2" class="mb-3">
+        </div>
+        <div id="plot3" class="mb-3">
+        </div>
+        <div id="plot4" class="mb-3">
+        </div>
+        <div id="plot5" class="mb-3">
+        </div>
+        <div>
+            <button id="savePlotsButton" class="btn btn-primary">Save Plots</button>
+        </div>
+    </div>
+    
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        $('#searchButton').click(function() {
+            var searchTerm = $('#searchInput').val();
+            $.ajax({
+                url: '/search',
+                type: 'POST',
+                data: {term: searchTerm},
+                success: function(response) {
+                    $('#searchResults').html(response);
+                }
+            });
+        });
+
+        $('#companySelect').change(function() {
+            var selectedCompany = $(this).val();
+            $.ajax({
+                url: '/company_individual',
+                type: 'POST',
+                data: {company: selectedCompany},
+                success: function(response) {
+                    $('#plot1').html(response.plot1);
+                    $('#plot3').html(response.plot3);
+                }
+            });
+        });
+
+        $('#partySelect').change(function() {
+            var selectedParty = $(this).val();
+            $.ajax({
+                url: '/political_party',
+                type: 'POST',
+                data: {party: selectedParty},
+                success: function(response) {
+                    $('#plot2').html(response.plot2);
+                }
+            });
+        });
+
+    </script>
+</body>
+</html>
